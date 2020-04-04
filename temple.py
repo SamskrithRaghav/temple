@@ -22,7 +22,7 @@ def main():
   #spaceship.shapesize(10,3)
   spaceship.penup()
   speed = 1 
-  #spaceship.speed(100)
+  spaceship.speed(100)
 
   def square(length):
     spaceship.pendown()
@@ -59,18 +59,16 @@ def main():
 
   def collision():
     if squarehit > 0:
-        collision_square()
+      collision_square()
     if circlehit > 0:
       collision_circle()
     if trihit > 0:
-      collision_triangle()
+      collision_square2()
 
   def collision_square():
     if -200 <= int(spaceship.xcor()) <= -150 and 0 <= int(spaceship.ycor()) <= 50:
-      squarehit = 0
       style = ('Courier', 30, 'Bold')
       spaceship.write('FIGHT!FIGHT!FIGHT!FIGHT!', font=style, align='center')
-      print("squarehit", squarehit)
 
   def collision_circle():
     if math.sqrt(((int(spaceship.xcor()) - 0) ** 2) + (int(spaceship.ycor()) - 225) ** 2) <= 25:
@@ -88,25 +86,27 @@ def main():
     if circlehit > 0:
       lcollision_circle()
     if trihit > 0:
-       lcollision_square2()
+      lcollision_square2()
 
   def lcollision_square():
-    if -200 <= int(spaceship.xcor()) <= -150 and 0 <= int(spaceship.ycor()) <= 50:
+    print (missile.xcor(), missile.ycor())
+    if -200 <= int(missile.xcor()) <= -150 and 0 <= int(missile.ycor()) <= 50:
       global squarehit
       squarehit = squarehit - 1
+      print(squarehit)
       if squarehit <= 0:
         explosion1()
 
 
   def lcollision_circle():
-    if math.sqrt(((int(spaceship.xcor()) - 0) ** 2) + (int(spaceship.ycor()) - 225) ** 2) <= 25:
+    if math.sqrt(((int(missile.xcor()) - 0) ** 2) + (int(missile.ycor()) - 225) ** 2) <= 25:
       global circlehit
       circlehit = circlehit - 1
       if circlehit <= 0:
         explosion2()
 
   def lcollision_square2():
-    if 200 <= int(spaceship.xcor()) <= 250 and 0 <= int(spaceship.ycor()) <= 50:
+    if 200 <= int(missile.xcor()) <= 250 and 0 <= int(missile.ycor()) <= 50:
       global trihit
       trihit = trihit - 1
       if trihit <= 0:
@@ -140,29 +140,18 @@ def main():
     win_state()
 
   def laser():
-    spaceship.speed(100000)
-    spaceship.color('red','red')
-    spaceship.pendown()
-    spaceship.ht()
-    spaceship.fd(100)
-    collision_laser()
-    spaceship.bk(100)
-    spaceship.st()
-    spaceship.speed(10000000)
-    spaceship.color('black','black')
-    spaceship.pendown()
-    spaceship.ht()
-    spaceship.fd(100)
-    spaceship.bk(100)
-    spaceship.st()
-    spaceship.penup()
-    spaceship.color('gold','white')
-    spaceship.speed(100)
-  
-  def fire():
-    laser()
-    time.sleep(1)
-    fire()
+    missile = turtle.Turtle()
+    missile.speed(1000)
+    missile.ht()
+    missile.color('red','red')
+    missile.penup()
+    missile.setheading(spaceship.heading())
+    missile.goto(spaceship.xcor(), spaceship.ycor())
+    missile.st()
+    missile.speed(100)
+    for x in range(1,500):
+      missile.fd(5)
+      #collision_laser()
   
   def explosion1():
     del(fire)
@@ -288,11 +277,9 @@ def main():
   wn.onkey(fdn, "Down")
   wn.onkey(flt, "Left")
   wn.onkey(frt, "Right")
-
+  wn.onkey(laser, "Space")
 
   wn.listen()
-
-  fire()
 
   if length == 0:
     exit()
